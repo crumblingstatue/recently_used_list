@@ -48,6 +48,22 @@ impl<T> RecentlyUsedList<T> {
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter().rev()
     }
+    /// Similar to `Vec::retain`, but iterates in recent-to-least-recent order.
+    pub fn retain<F: FnMut(&mut T) -> bool>(&mut self, mut f: F) {
+        if self.items.is_empty() {
+            return;
+        }
+        let mut idx = self.items.len() - 1;
+        loop {
+            if !f(&mut self.items[idx]) {
+                self.items.remove(idx);
+            }
+            if idx == 0 {
+                break;
+            }
+            idx -= 1;
+        }
+    }
 }
 
 #[test]
