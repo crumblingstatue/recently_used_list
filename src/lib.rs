@@ -3,14 +3,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RecentlyUsedList<T> {
     items: Vec<T>,
-    max_items: usize,
+    capacity: usize,
 }
 
 impl<T> Default for RecentlyUsedList<T> {
     fn default() -> Self {
         Self {
             items: Vec::new(),
-            max_items: 7,
+            capacity: 7,
         }
     }
 }
@@ -22,7 +22,7 @@ impl<T: PartialEq> RecentlyUsedList<T> {
             self.items.remove(pos);
         }
         self.items.push(item);
-        if self.items.len() > self.max_items {
+        if self.items.len() > self.capacity {
             self.items.remove(0);
         }
     }
@@ -36,6 +36,12 @@ impl<T: PartialEq> RecentlyUsedList<T> {
 }
 
 impl<T> RecentlyUsedList<T> {
+    pub fn with_capacity(cap: usize) -> Self {
+        Self {
+            items: Vec::new(),
+            capacity: cap,
+        }
+    }
     pub fn most_recent(&self) -> Option<&T> {
         self.items.last()
     }
@@ -47,6 +53,12 @@ impl<T> RecentlyUsedList<T> {
     }
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter().rev()
+    }
+    pub fn capacity(&self) -> usize {
+        self.capacity
+    }
+    pub fn set_capacity(&mut self, cap: usize) {
+        self.capacity = cap;
     }
     /// Similar to `Vec::retain`, but iterates in recent-to-least-recent order.
     pub fn retain<F: FnMut(&mut T) -> bool>(&mut self, mut f: F) {
