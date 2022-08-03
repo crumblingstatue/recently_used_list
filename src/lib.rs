@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RecentlyUsedList<T> {
     items: Vec<T>,
+    #[serde(default = "default_capacity")]
     capacity: usize,
 }
 
@@ -10,9 +11,13 @@ impl<T> Default for RecentlyUsedList<T> {
     fn default() -> Self {
         Self {
             items: Vec::new(),
-            capacity: 7,
+            capacity: default_capacity(),
         }
     }
+}
+
+const fn default_capacity() -> usize {
+    7
 }
 
 impl<T: PartialEq> RecentlyUsedList<T> {
