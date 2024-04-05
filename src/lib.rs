@@ -81,6 +81,10 @@ impl<T> RecentlyUsedList<T> {
             idx -= 1;
         }
     }
+    /// Clear all items from this list
+    pub fn clear(&mut self) {
+        self.items.clear();
+    }
 }
 
 #[test]
