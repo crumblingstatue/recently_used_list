@@ -56,7 +56,7 @@ impl<T> RecentlyUsedList<T> {
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
-    pub fn iter(&self) -> impl Iterator<Item = &T> {
+    pub fn iter(&self) -> std::iter::Rev<std::slice::Iter<T>> {
         self.items.iter().rev()
     }
     pub fn capacity(&self) -> usize {
