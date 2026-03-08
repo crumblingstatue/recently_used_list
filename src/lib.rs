@@ -40,6 +40,15 @@ impl<T: PartialEq> RecentlyUsedList<T> {
     }
 }
 
+/// Iterator over recently used list elements, in order of most to least recent
+///
+/// ## Implementation details
+///
+/// Unfortunately we can't return `impl Iterator` from [`RecentlyUsedList::iter`], because it
+/// slightly alters borrow checking behavior due to drop glue. This concrete type doesn't have
+/// any drop glue, but `impl Iterator` doesn't know that.
+pub type Iter<'a, T> = std::iter::Rev<std::slice::Iter<'a, T>>;
+
 impl<T> RecentlyUsedList<T> {
     pub fn with_capacity(cap: usize) -> Self {
         Self {
@@ -56,7 +65,7 @@ impl<T> RecentlyUsedList<T> {
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
-    pub fn iter(&self) -> std::iter::Rev<std::slice::Iter<T>> {
+    pub fn iter(&self) -> Iter<'_, T> {
         self.items.iter().rev()
     }
     pub fn capacity(&self) -> usize {
