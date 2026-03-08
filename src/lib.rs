@@ -1,5 +1,10 @@
+#![warn(missing_docs)]
+
+//! A simple recently-used list with serde support
+
 use serde::{Deserialize, Serialize};
 
+/// Recently used list
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RecentlyUsedList<T> {
     items: Vec<T>,
@@ -21,6 +26,7 @@ const fn default_capacity() -> usize {
 }
 
 impl<T: PartialEq> RecentlyUsedList<T> {
+    /// Add `item` to the list as the most recently used item.
     pub fn use_(&mut self, item: T) {
         let pos = self.items.iter().position(|it| it == &item);
         if let Some(pos) = pos {
@@ -31,8 +37,10 @@ impl<T: PartialEq> RecentlyUsedList<T> {
             self.items.remove(0);
         }
     }
-
-    pub fn remove(&mut self, item: T) {
+    /// Find and remove `item` from the list.
+    ///
+    /// Does nothing if `item` is not found in the list.
+    pub fn find_remove(&mut self, item: T) {
         let pos = self.items.iter().position(|it| it == &item);
         if let Some(pos) = pos {
             self.items.remove(pos);
@@ -50,27 +58,35 @@ impl<T: PartialEq> RecentlyUsedList<T> {
 pub type Iter<'a, T> = std::iter::Rev<std::slice::Iter<'a, T>>;
 
 impl<T> RecentlyUsedList<T> {
+    /// Creates a new recently used list with capacity specified by `cap`,
+    /// instead of the default (7).
     pub fn with_capacity(cap: usize) -> Self {
         Self {
             items: Vec::new(),
             capacity: cap,
         }
     }
+    /// Returns the most recent item, if the list is not empty
     pub fn most_recent(&self) -> Option<&T> {
         self.items.last()
     }
+    /// Returns the number of items
     pub fn len(&self) -> usize {
         self.items.len()
     }
+    /// Whether this list is empty
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
+    /// Returns an iterator over the list items, in order of most to least recent
     pub fn iter(&self) -> Iter<'_, T> {
         self.items.iter().rev()
     }
+    /// Returns the capacity of this list
     pub fn capacity(&self) -> usize {
         self.capacity
     }
+    /// Sets the capacity of this list
     pub fn set_capacity(&mut self, cap: usize) {
         self.capacity = cap;
     }
