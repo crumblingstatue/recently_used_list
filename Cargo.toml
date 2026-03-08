@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 description = "A simple recently-used list with serde support"
 repository = "https://github.com/crumblingstatue/recently_used_list"
+license = "MIT OR Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
