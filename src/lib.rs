@@ -22,7 +22,7 @@ impl<T> Default for RecentlyUsedList<T> {
 }
 
 const fn default_capacity() -> usize {
-    7
+    10
 }
 
 impl<T: PartialEq> RecentlyUsedList<T> {
@@ -59,7 +59,7 @@ pub type Iter<'a, T> = std::iter::Rev<std::slice::Iter<'a, T>>;
 
 impl<T> RecentlyUsedList<T> {
     /// Creates a new recently used list with capacity specified by `cap`,
-    /// instead of the default (7).
+    /// instead of the default (10).
     pub fn with_capacity(cap: usize) -> Self {
         Self {
             items: Vec::new(),
@@ -124,7 +124,7 @@ fn test() {
     for i in 0..10 {
         ru.use_(i);
     }
-    assert_eq!(ru.len(), 7);
+    assert_eq!(ru.len(), 10);
     assert_eq!(ru.most_recent(), Some(&9));
     let items: Vec<_> = ru.iter().collect();
     assert_eq!(items[0], &9);
